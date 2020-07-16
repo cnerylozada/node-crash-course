@@ -1,8 +1,8 @@
-const userSchema = require("../schemas/schemas");
+const { courseSchema, userSchema } = require("../schemas/schemas");
 
 module.exports = {
   addCourseValidation: (req, res, next) => {
-    userSchema.validate(req.body, { abortEarly: false }).then(
+    courseSchema.validate(req.body, { abortEarly: false }).then(
       (_) => {
         next();
       },
@@ -10,5 +10,16 @@ module.exports = {
         res.status(404).send(err.errors);
       }
     );
+  },
+
+  addUserValidation: async (req, res, next) => {
+    const validationResult = await userSchema.validate(req.body, {
+      abortEarly: false,
+    });
+    !!validationResult.error
+      ? res
+          .status(404)
+          .send(validationResult.error.details.map((_) => _.message))
+      : next();
   },
 };

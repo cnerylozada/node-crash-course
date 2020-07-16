@@ -1,13 +1,14 @@
 const express = require("express");
-
 const app = express();
+const {
+  addCourseValidation,
+  addUserValidation,
+} = require("./middlewares/inputValidation");
+
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
 app.listen(port);
-
-const yup = require("yup");
-const { addCourseValidation } = require("./middlewares/inputValidation");
 
 const courses = [
   { id: 1, name: "Mongo DB" },
@@ -39,4 +40,12 @@ app.post("/api/courses", addCourseValidation, (req, res) => {
   };
   courses.push(newCourse);
   res.send(_);
+});
+
+app.post("/api/users", addUserValidation, (req, res) => {
+  const newUser = {
+    username: req.body.name,
+    password: req.body.password,
+  };
+  res.send(newUser);
 });
