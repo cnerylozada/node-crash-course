@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 app.listen(port);
 
 const yup = require("yup");
+const { addCourseValidation } = require("./middlewares/inputValidation");
 
 const courses = [
   { id: 1, name: "Mongo DB" },
@@ -31,23 +32,11 @@ app.get("/api/courses/:id", (req, res) => {
   !!course ? res.send(course) : res.status(404).send("NOT FOUND");
 });
 
-app.post("/api/courses", (req, res) => {
-  const schema = yup.object().shape({
-    name: yup.string().min(5).required(),
-    age: yup.number().min(25).integer().required(),
-  });
-
-  schema.validate(req.body, { abortEarly: false }).then(
-    (_) => {
-      const newCourse = {
-        id: courses.length + 1,
-        name: req.body.name,
-      };
-      courses.push(newCourse);
-      res.send(_);
-    },
-    (err) => {
-      res.status(404).send(err.errors);
-    }
-  );
+app.post("/api/courses", addCourseValidation, (req, res) => {
+  const newCourse = {
+    id: courses.length + 1,
+    name: req.body.name,
+  };
+  courses.push(newCourse);
+  res.send(_);
 });
