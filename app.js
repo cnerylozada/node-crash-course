@@ -5,6 +5,9 @@ const {
   addUserValidation,
 } = require("./middlewares/inputValidation");
 
+const mongoDBURI =
+  "mongodb+srv://cnerylozada:19467381Abc@nodeninja.pwwtx.mongodb.net/<dbname>?retryWrites=true&w=majority";
+
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
@@ -25,6 +28,10 @@ app.get("/", (req, res) => {
 
 app.get("/api/courses", (req, res) => {
   res.send(courses);
+});
+
+app.get("/api/all-courses", (req, res) => {
+  res.redirect("/api/courses");
 });
 
 app.get("/api/courses/:id", (req, res) => {
@@ -48,4 +55,8 @@ app.post("/api/users", addUserValidation, (req, res) => {
     password: req.body.password,
   };
   res.send(newUser);
+});
+
+app.use((req, res) => {
+  res.status(404).sendFile("./views/not-found.html", { root: __dirname });
 });
