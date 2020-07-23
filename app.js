@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
 const {
   addCourseValidation,
   addUserValidation,
@@ -7,8 +8,6 @@ const {
 
 const mongoDBURI =
   "mongodb+srv://cnerylozada:19467381Abc@nodeninja.pwwtx.mongodb.net/<dbname>?retryWrites=true&w=majority";
-
-app.use(express.json());
 
 const port = process.env.PORT || 3000;
 app.listen(port);
@@ -21,6 +20,9 @@ const courses = [
   { id: 5, name: "Angular" },
   { id: 6, name: "SCSS" },
 ];
+
+app.use(express.json());
+app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
   res.sendFile("./views/index.html", { root: __dirname });
