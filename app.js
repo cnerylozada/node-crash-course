@@ -5,12 +5,23 @@ const {
   addCourseValidation,
   addUserValidation,
 } = require("./middlewares/inputValidation");
+const mongoose = require("mongoose");
 
 const mongoDBURI =
-  "mongodb+srv://cnerylozada:19467381Abc@nodeninja.pwwtx.mongodb.net/<dbname>?retryWrites=true&w=majority";
+  "mongodb+srv://cnerylozada:19467381Abc@nodeninja.pwwtx.mongodb.net/nodeninja?retryWrites=true&w=majority";
+mongoose
+  .connect(mongoDBURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((_) => {
+    console.log("Connected to db");
+    const port = process.env.PORT || 3000;
+    app.listen(port);
+  })
+  .catch((error) => console.log(error));
 
-const port = process.env.PORT || 3000;
-app.listen(port);
+app.use(express.json());
 
 const courses = [
   { id: 1, name: "Mongo DB" },
