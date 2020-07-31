@@ -1,25 +1,11 @@
 const express = require("express");
-const app = express();
 const morgan = require("morgan");
 const {
   addCourseValidation,
   addUserValidation,
 } = require("./middlewares/inputValidation");
-const mongoose = require("mongoose");
 
-const mongoDBURI =
-  "mongodb+srv://cnerylozada:19467381Abc@nodeninja.pwwtx.mongodb.net/nodeninja?retryWrites=true&w=majority";
-mongoose
-  .connect(mongoDBURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then((_) => {
-    console.log("Connected to db");
-    const port = process.env.PORT || 3000;
-    app.listen(port);
-  })
-  .catch((error) => console.log(error));
+const app = express();
 
 app.use(express.json());
 
@@ -32,7 +18,6 @@ const courses = [
   { id: 6, name: "SCSS" },
 ];
 
-app.use(express.json());
 app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
