@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const mongoDBURI =
-  "mongodb+srv://cnerylozada:19467381Abc@nodeninja.pwwtx.mongodb.net/nodeninja?retryWrites=true&w=majority";
-
-const blogSchema = new Schema(
+const blogSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -23,4 +19,4 @@ const blogSchema = new Schema(
 );
 
 const Blog = mongoose.model("Blog", blogSchema);
-module.exports = { mongoDBURI, Blog };
+module.exports = { Blog };

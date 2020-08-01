@@ -4,8 +4,20 @@ const {
   addCourseValidation,
   addUserValidation,
 } = require("./middlewares/inputValidation");
+const mongoose = require("mongoose");
+const { Course } = require("./models/courses");
+const { mongoDBURI } = require("./models/connection");
 
 const app = express();
+mongoose
+  .connect(mongoDBURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((_) => {
+    const port = process.env.PORT || 3000;
+    app.listen(port);
+  });
 
 app.use(express.json());
 
@@ -24,7 +36,8 @@ app.get("/", (req, res) => {
   res.sendFile("./views/index.html", { root: __dirname });
 });
 
-app.get("/api/courses", (req, res) => {
+app.get("/api/courses", async (req, res) => {
+  const courses = await Course.find();
   res.send(courses);
 });
 
@@ -32,10 +45,20 @@ app.get("/api/all-courses", (req, res) => {
   res.redirect("/api/courses");
 });
 
-app.get("/api/courses/:id", (req, res) => {
+app.get("/api/query", (req, res) => {
+  Course.find({ author: "Cesar", isPublished: false })
+    .sort({ name: 1 })
+    .then((_) => res.send(_));
+});
+
+app.get("/api/courses/:id", async (req, res) => {
   const courseId = req.params.id;
-  const course = courses.find((_) => _.id == courseId);
-  !!course ? res.send(course) : res.status(404).send("NOT FOUND");
+  try {
+    const course = await Course.findById(courseId);
+    res.send(course);
+  } catch (err) {
+    res.status(404).send("Custom Message: NOT FOUND !");
+  }
 });
 
 app.post("/api/courses", addCourseValidation, (req, res) => {

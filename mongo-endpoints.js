@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { mongoDBURI, Blog } = require("./models/blogs");
+const { Blog } = require("./models/blogs");
+const { mongoDBURI } = require("./models/connection");
 
 const app = express();
 
@@ -10,7 +11,6 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((_) => {
-    console.log("Connected to db");
     const port = process.env.PORT || 3000;
     app.listen(port);
   });
@@ -21,15 +21,15 @@ app.get("/", (req, res) => {
   res.sendFile("./views/index.html", { root: __dirname });
 });
 
-app.get("/blogs", (req, res) => {
-  Blog.find().then((_) => {
-    res.send(_);
-  });
+app.get("/blogs", async (req, res) => {
+  const blogs = await Blog.find();
+  res.send(blogs);
 });
 
-app.get("/blogs/:id", (req, res) => {
+app.get("/blogs/:id", async (req, res) => {
   const blogId = req.params.id;
-  Blog.findById(blogId).then((_) => res.send(_));
+  const blog = await Blog.findById(blogId);
+  res.send(blog);
 });
 
 app.get("/add-blog", (req, res) => {
