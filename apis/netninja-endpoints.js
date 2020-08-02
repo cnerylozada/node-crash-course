@@ -21,24 +21,20 @@ app.get("/", (req, res) => {
   res.sendFile("./views/index.html", { root: __dirname });
 });
 
-app.get("/blogs", async (req, res) => {
+app.get("/api/blogs", async (req, res) => {
   const blogs = await Blog.find();
   res.send(blogs);
 });
 
-app.get("/blogs/:id", async (req, res) => {
+app.get("/api/blogs/:id", async (req, res) => {
   const blogId = req.params.id;
   const blog = await Blog.findById(blogId);
   res.send(blog);
 });
 
-app.get("/add-blog", (req, res) => {
-  const blog = new Blog({
-    title: "my new blog2",
-    snippet: "about more mongodb",
-    body: "lorep ipsum...",
-  });
-  blog.save().then((_) => res.send(_));
+app.post("/api/blog", async (req, res) => {
+  const blogAdded = await new Blog(req.body).save();
+  res.send(blogAdded);
 });
 
 app.use((req, res) => {

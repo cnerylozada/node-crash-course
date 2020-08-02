@@ -1,4 +1,4 @@
-const { courseSchema, userSchema } = require("../schemas/schemas");
+const { courseSchema, userSchema } = require("./schemas");
 
 module.exports = {
   addCourseValidation: (req, res, next) => {

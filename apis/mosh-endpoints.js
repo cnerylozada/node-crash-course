@@ -1,12 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
-const {
-  addCourseValidation,
-  addUserValidation,
-} = require("./middlewares/inputValidation");
 const mongoose = require("mongoose");
-const { Course } = require("./models/courses");
-const { mongoDBURI } = require("./models/connection");
+const { Course } = require("../models/courses");
+const { mongoDBURI } = require("../models/connection");
 
 const app = express();
 mongoose
@@ -20,20 +16,10 @@ mongoose
   });
 
 app.use(express.json());
-
-const courses = [
-  { id: 1, name: "Mongo DB" },
-  { id: 2, name: "Amazon web services" },
-  { id: 3, name: "React native" },
-  { id: 4, name: "Node js" },
-  { id: 5, name: "Angular" },
-  { id: 6, name: "SCSS" },
-];
-
 app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
-  res.sendFile("./views/index.html", { root: __dirname });
+  res.sendFile("../views/index.html", { root: __dirname });
 });
 
 app.get("/api/courses", async (req, res) => {
@@ -45,9 +31,10 @@ app.get("/api/all-courses", (req, res) => {
   res.redirect("/api/courses");
 });
 
-app.get("/api/query", (req, res) => {
+app.get("/api/courses/query", (req, res) => {
   Course.find({ author: "Cesar", isPublished: false })
     .sort({ name: 1 })
+    .select({ name: 1, tags: 1 })
     .then((_) => res.send(_));
 });
 
@@ -61,23 +48,11 @@ app.get("/api/courses/:id", async (req, res) => {
   }
 });
 
-app.post("/api/courses", addCourseValidation, (req, res) => {
-  const newCourse = {
-    id: courses.length + 1,
-    name: req.body.name,
-  };
-  courses.push(newCourse);
-  res.send(_);
-});
-
-app.post("/api/users", addUserValidation, (req, res) => {
-  const newUser = {
-    username: req.body.name,
-    password: req.body.password,
-  };
-  res.send(newUser);
+app.post("/api/courses", async (req, res) => {
+  const courseAdded = await new Course(req.body).save();
+  res.send(courseAdded);
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile("./views/not-found.html", { root: __dirname });
+  res.status(404).sendFile("../views/not-found.html", { root: __dirname });
 });
