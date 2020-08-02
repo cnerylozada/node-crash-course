@@ -21,7 +21,8 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
-  res.sendFile("../views/index.html", { root: __dirname });
+  // res.sendFile("../views/index.html", { root: __dirname });
+  res.sendFile(path.resolve("../views/index.html"));
 });
 
 app.post("/api/courses", addCourseValidation, (req, res) => {
@@ -42,5 +43,6 @@ app.post("/api/users", addUserValidation, (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile("../views/not-found.html", { root: __dirname });
+  // res.status(404).sendFile("../views/not-found.html", { root: __dirname });
+  res.status(404).sendFile(path.resolve("../views/not-found.html"));
 });

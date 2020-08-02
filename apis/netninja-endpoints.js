@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const { Blog } = require("./models/blogs");
@@ -18,7 +19,7 @@ mongoose
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.sendFile("./views/index.html", { root: __dirname });
+  res.sendFile(path.resolve("../views/index.html"));
 });
 
 app.get("/api/blogs", async (req, res) => {
@@ -38,5 +39,5 @@ app.post("/api/blog", async (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile("./views/not-found.html", { root: __dirname });
+  res.status(404).sendFile(path.resolve("../views/not-found.html"));
 });

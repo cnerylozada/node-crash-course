@@ -1,10 +1,12 @@
+const path = require("path");
 const express = require("express");
-const morgan = require("morgan");
 const mongoose = require("mongoose");
+const morgan = require("morgan");
 const { Course } = require("../models/courses");
 const { mongoDBURI } = require("../models/connection");
 
 const app = express();
+
 mongoose
   .connect(mongoDBURI, {
     useNewUrlParser: true,
@@ -19,7 +21,7 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
-  res.sendFile("../views/index.html", { root: __dirname });
+  res.sendFile(path.resolve("../views/index.html"));
 });
 
 app.get("/api/courses", async (req, res) => {
@@ -54,5 +56,5 @@ app.post("/api/courses", async (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile("../views/not-found.html", { root: __dirname });
+  res.status(404).sendFile(path.resolve("../views/not-found.html"));
 });
