@@ -21,11 +21,11 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.resolve("../views/index.html"));
+  res.sendFile(path.resolve("views/index.html"));
 });
 
 app.get("/api/courses", async (req, res) => {
-  const courses = await Course.find();
+  const courses = await Course.find().select("-__v");
   res.send(courses);
 });
 
@@ -33,10 +33,16 @@ app.get("/api/all-courses", (req, res) => {
   res.redirect("/api/courses");
 });
 
-app.get("/api/courses/query", (req, res) => {
+app.get("/api/courses/querying-documents", (req, res) => {
   Course.find({ author: "Cesar", isPublished: false })
     .sort({ name: 1 })
     .select({ name: 1, tags: 1 })
+    .then((_) => res.send(_));
+});
+
+app.get("/api/courses/logical-query-operators", (req, res) => {
+  Course.find()
+    .or([{ name: /^Mosh$/ }, { isPublished: true }])
     .then((_) => res.send(_));
 });
 
@@ -56,5 +62,5 @@ app.post("/api/courses", async (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile(path.resolve("../views/not-found.html"));
+  res.status(404).sendFile(path.resolve("views/not-found.html"));
 });
