@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const { Course } = require("../models/courses");
 const { mongoDBURI } = require("../models/connection");
+const { isRegExp } = require("util");
 
 const app = express();
 
@@ -68,6 +69,17 @@ app.get("/api/courses/:id", async (req, res) => {
 app.post("/api/courses", async (req, res) => {
   const courseAdded = await new Course(req.body).save();
   res.send(courseAdded);
+});
+
+app.put("/api/courses/:id", async (req, res) => {
+  const courseUpdated = await Course.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: req.body,
+    },
+    { new: true }
+  );
+  res.send(courseUpdated);
 });
 
 app.use((req, res) => {
