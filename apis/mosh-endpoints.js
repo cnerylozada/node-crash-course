@@ -46,6 +46,15 @@ app.get("/api/courses/logical-query-operators", (req, res) => {
     .then((_) => res.send(_));
 });
 
+app.get("/api/courses/pagination", (req, res) => {
+  const pageNumber = 2;
+  const pageSize = 4;
+  Course.find()
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize)
+    .then((_) => res.send(_));
+});
+
 app.get("/api/courses/:id", async (req, res) => {
   const courseId = req.params.id;
   try {
