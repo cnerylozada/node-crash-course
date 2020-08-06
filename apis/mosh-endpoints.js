@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
 
 app.get("/api/courses", async (req, res) => {
   const courses = await Course.find().select("-__v");
-  res.send(courses);
+  res.status(200).send(courses);
 });
 
 app.get("/api/all-courses", (req, res) => {
@@ -60,7 +60,7 @@ app.get("/api/courses/:id", async (req, res) => {
   const courseId = req.params.id;
   try {
     const course = await Course.findById(courseId);
-    res.send(course);
+    res.status(302).send(course);
   } catch (err) {
     res.status(404).send("Custom Message: NOT FOUND !");
   }
@@ -68,7 +68,7 @@ app.get("/api/courses/:id", async (req, res) => {
 
 app.post("/api/courses", async (req, res) => {
   const courseAdded = await new Course(req.body).save();
-  res.send(courseAdded);
+  res.status(201).send(courseAdded);
 });
 
 app.put("/api/courses/:id", async (req, res) => {
@@ -79,7 +79,12 @@ app.put("/api/courses/:id", async (req, res) => {
     },
     { new: true }
   );
-  res.send(courseUpdated);
+  res.status(302).send(courseUpdated);
+});
+
+app.delete("/api/courses/:id", async (req, res) => {
+  await Course.deleteOne({ _id: req.params.id });
+  res.status(204).send("Document was deleted successfully");
 });
 
 app.use((req, res) => {
