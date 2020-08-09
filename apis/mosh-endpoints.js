@@ -2,9 +2,8 @@ const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
-const { Course } = require("../models/courses");
+const { Course, validateCourse } = require("../models/courses");
 const { mongoDBURI } = require("../models/connection");
-const { isRegExp } = require("util");
 
 const app = express();
 
@@ -14,7 +13,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((_) => {
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 8000;
     app.listen(port);
   });
 
@@ -67,8 +66,13 @@ app.get("/api/courses/:id", async (req, res) => {
 });
 
 app.post("/api/courses", async (req, res) => {
-  const courseAdded = await new Course(req.body).save();
-  res.status(201).send(courseAdded);
+  try {
+    await validateCourse(req.body);
+    const courseAdded = await new Course(req.body).save();
+    res.status(201).send(courseAdded);
+  } catch (err) {
+    res.status(404).send(err.errors);
+  }
 });
 
 app.put("/api/courses/:id", async (req, res) => {

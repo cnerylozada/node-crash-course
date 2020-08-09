@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const yup = require("yup");
 
 const courseSchema = new mongoose.Schema({
   name: String,
@@ -10,4 +11,15 @@ const courseSchema = new mongoose.Schema({
 
 const Course = mongoose.model("Course", courseSchema);
 
-module.exports = { Course };
+const validateCourse = (course) => {
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    author: yup.string().required(),
+    tags: yup.array().of(yup.string()).required(),
+    date: yup.date(),
+    isPublished: yup.boolean().required(),
+  });
+  return schema.validate(course, { abortEarly: false });
+};
+
+module.exports = { Course, validateCourse };
