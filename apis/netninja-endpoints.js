@@ -7,15 +7,20 @@ const blogRoutes = require("../routes/netninja-routes");
 
 const app = express();
 
-mongoose
-  .connect(mongoDBURI, {
+const connect = () => {
+  return mongoose.connect(mongoDBURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
-  .then((_) => {
-    const port = process.env.PORT || 3000;
-    app.listen(port);
   });
+};
+
+const setPORT = async () => {
+  await connect();
+  const port = process.env.PORT || 3000;
+  app.listen(port);
+};
+
+setPORT();
 
 app.use(express.json());
 app.use(morgan("tiny"));

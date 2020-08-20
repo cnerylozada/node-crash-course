@@ -4,8 +4,10 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const { Course, validateCourse } = require("../models/courses");
 const { mongoDBURI } = require("../models/connection");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
 
 mongoose
   .connect(mongoDBURI, {
