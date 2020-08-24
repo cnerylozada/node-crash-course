@@ -31,7 +31,7 @@ const Course = mongoose.model(
   "Course",
   new mongoose.Schema({
     name: String,
-    authorId: {
+    author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Author",
     },
@@ -43,10 +43,16 @@ const createAuthor = async (name, bio, website) => {
   console.log(authorCreated);
 };
 
-const createCourse = async (name, authorId) => {
-  const courseCreated = await new Course({ name, authorId }).save();
+const createCourse = async (name, author) => {
+  const courseCreated = await new Course({ name, author }).save();
   console.log(courseCreated);
 };
 
+const listOfCourses = async () => {
+  const listOfCourses = await Course.find().populate("author").select("-__v");
+  console.log(listOfCourses);
+};
+
 // createAuthor("Mosh", "My bio", "My Website");
-createCourse("Node Course", "5f3e87e60f638805ad407b20");
+// createCourse("Node Course", "5f43b444fa5c1603898e5daa");
+listOfCourses();
