@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Cuenta ahorro soles",
+    "code": "001",
+    "status": 1
+  },
+  {
+    "name": "Cuenta ahorro dólares",
+    "code": "002",
+    "status": 1
+  },
+  {
+    "name": "Cuenta corriente soles",
+    "code": "003",
+    "status": 1
+  },
+  {
+    "name": "Cuenta corriente dólares",
+    "code": "004",
+    "status": 1
+  }
+]

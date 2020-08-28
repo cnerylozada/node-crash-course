@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const path = require("path");
 const {
   addCourseValidation,
   addUserValidation,
@@ -19,10 +20,19 @@ const port = process.env.PORT || 3000;
 app.listen(port);
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use((req, res, next) => {
+  setTimeout(() => next(), 2500);
+});
 
 app.get("/", (req, res) => {
   // res.sendFile("../views/index.html", { root: __dirname });
-  res.sendFile(path.resolve("../views/index.html"));
+  res.sendFile(path.resolve(__dirname, "../views/index.html"));
+});
+
+app.get("/account-types", (req, res) => {
+  res
+    .status(200)
+    .sendFile(path.resolve(__dirname, "mocks/account-types-response.json"));
 });
 
 app.post("/api/courses", addCourseValidation, (req, res) => {
