@@ -1,0 +1,22 @@
+[
+  {
+    "firstName": "Brayan",
+    "lastName": "Espinoza",
+    "role": {
+      "id": 2,
+      "name": "Administrador",
+      "created_by": "SYSTEM",
+      "created_on": "2020-09-08T21:39:21.946Z",
+      "updated_by": null,
+      "updated_on": null
+    },
+    "subsidiary": {
+      "id": 1,
+      "name": "Interbank",
+      "created_by": "SYSTEM",
+      "created_on": "2020-09-08T21:39:21.983Z",
+      "updated_by": null,
+      "updated_on": null
+    }
+  }
+]
